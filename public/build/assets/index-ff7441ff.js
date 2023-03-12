@@ -1,0 +1,1 @@
+const e=document.querySelector("#change_password"),c=document.querySelector("#form_change_password");e!=null&&(e.checked&&c.classList.replace("hidden","block"),e.addEventListener("change",function(){this.checked?c.classList.replace("hidden","block"):c.classList.replace("block","hidden")}));
