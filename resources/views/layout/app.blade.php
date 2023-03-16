@@ -8,9 +8,11 @@
     <title>devpstagram- @yield('titulo')</title>
     @stack('styles')
 
-    @vite('resources/css/app.css')
+    <link rel="stylesheet" href="{{asset('build/assets/app-dc102b5a.css')}}">
+
+    {{-- @vite('resources/css/app.css')
     @vite('resources/js/app.js')
-    @vite('resources/js/Perfil//index.js')
+    @vite('resources/js/Perfil//index.js') --}}
 
     @livewireStyles
 </head>
@@ -64,6 +66,8 @@
         Devpstagrant todos los derechos reservados {{ now()->year }}
     </footer>
     @livewireScripts
+    <script src="{{asset('build/assets/app-3c5a9e80.js')}}"></script>
+    <script src="{{asset('build/assets/index-ff7441ff.js')}}"></script>
 </body>
 
 </html>
