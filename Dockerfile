@@ -1,30 +1,18 @@
-# Utiliza la imagen de PHP 8.1.0 con Apache
-FROM php:8.1.0-apache
+FROM php:8.1-fpm-alpine
 
-# Actualiza el gestor de paquetes e instala las dependencias necesarias
-RUN apt-get update && \
-    apt-get install -y \
-        libzip-dev \
-        zip \
-        unzip && \
-    docker-php-ext-install zip && \
-    a2enmod rewrite && \
-    service apache2 restart
+RUN apk add --no-cache nginx wget
 
-# Copia los archivos de tu proyecto al directorio de trabajo
-WORKDIR /var/www/html
-COPY . .
+RUN mkdir -p /run/nginx
 
-# Instala Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY docker/nginx.conf /etc/nginx/nginx.conf
 
-# Instala las dependencias de PHP
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+RUN mkdir -p /app
+COPY . /app
 
-# Cambia el propietario del directorio de trabajo a www-data y establece los permisos adecuados
-RUN chown -R www-data:www-data /var/www/html && \
-    chmod -R 755 /var/www/html/storage
+RUN sh -c "wget http://getcomposer.org/composer.phar && chmod a+x composer.phar && mv composer.phar /usr/local/bin/composer"
+RUN cd /app && \
+    /usr/local/bin/composer install --no-dev
 
+RUN chown -R www-data: /app
 
-# Establece el comando predeterminado para ejecutar el contenedor
-CMD ["apache2-foreground"]
+CMD sh /app/docker/startup.sh
